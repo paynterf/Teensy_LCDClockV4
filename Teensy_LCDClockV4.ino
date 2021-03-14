@@ -99,16 +99,11 @@ CustomBox HourHighlightBox(20, TIME_HIGHLIGHT_BOX_YLOC, TIME_HIGHLIGHT_BOX_WIDTH
 CustomBox MinuteHighlightBox(120, TIME_HIGHLIGHT_BOX_YLOC, TIME_HIGHLIGHT_BOX_WIDTH, TIME_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
 CustomBox SecondHighlightBox(230, TIME_HIGHLIGHT_BOX_YLOC, TIME_HIGHLIGHT_BOX_WIDTH, TIME_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
 
-//CustomBox MonthHighlightBox(95, DATE_HIGHLIGHT_BOX_YLOC, DATE_HIGHLIGHT_BOX_WIDTH, DATE_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
-//CustomBox DayHighlightBox(155, DATE_HIGHLIGHT_BOX_YLOC, DATE_HIGHLIGHT_BOX_WIDTH, DATE_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
-//CustomBox YearHighlightBox(205, DATE_HIGHLIGHT_BOX_YLOC, 2 * DATE_HIGHLIGHT_BOX_WIDTH, DATE_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
 CustomBox MonthHighlightBox(72, DATE_HIGHLIGHT_BOX_YLOC, DATE_HIGHLIGHT_BOX_WIDTH, DATE_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
 CustomBox DayHighlightBox(132, DATE_HIGHLIGHT_BOX_YLOC, DATE_HIGHLIGHT_BOX_WIDTH, DATE_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
-//CustomBox YearHighlightBox(178, DATE_HIGHLIGHT_BOX_YLOC, 2 * DATE_HIGHLIGHT_BOX_WIDTH, DATE_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
 CustomBox YearHighlightBox(178, DATE_HIGHLIGHT_BOX_YLOC, 90, DATE_HIGHLIGHT_BOX_HEIGHT, ILI9341_WHITE);
 
 CustomBox TimeBox(TIME_BOX_X, TIME_BOX_Y, TIME_BOX_WIDTH, TIME_BOX_HEIGHT, ILI9341_BLACK);
-//CustomBox TimeBox(TIME_BOX_X, TIME_BOX_Y, TIME_BOX_WIDTH, TIME_BOX_HEIGHT, ILI9341_YELLOW);
 CustomBox DateBox(DATE_BOX_X, DATE_BOX_Y, DATE_BOX_WIDTH, DATE_BOX_HEIGHT, ILI9341_BLACK);
 
 enum AdjustmentState
@@ -272,14 +267,14 @@ void setup()
   Serial.print("lostPower() reports "); Serial.println(lp);
   DateBox.Draw(&tft); //erase previous text
   tft.setCursor(0, 0);
-  //tft.printf("lostPower() = %d\n", lp);
+  tft.printf("lostPower() = %d\n", lp);
   delay(1000);
   if (rtc.lostPower())
   {
     Serial.println("RTC lost power.  Setting RTC to last compile time");
     DateBox.Draw(&tft); //erase previous text
     tft.setCursor(0, 0);
-    //tft.println("RTC lost power.  Setting RTC to last compile time");
+    tft.println("RTC lost power.  Setting RTC to last compile time");
 
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
@@ -293,7 +288,6 @@ void setup()
 
   //DateTime now = rtc.now();
   now = rtc.now();
-  //char buffer[100];
   memset(buffer, '\0', 100);
   GetDayDateTimeStringFromDateTime(now, buffer);
   Serial.println("Retrieving Date/Time from RTC....");
@@ -310,14 +304,6 @@ void setup()
   now = rtc.now();
   lasthour = now.hour();
   mSecSinceLastClockUpdate = 0; //used to space out clock updates in loop()
-
-////DEBUG!!
-//  ShowAdjButtons();
-//  while (true)
-//  {
-//
-//  }
-////DEBUG!!
 }
 
 
@@ -732,34 +718,10 @@ void ShowAdjButtons()
   Serial.printf("In ShowAdjButtons\n");
   HideButtons();
 
-  //03/13/21 have to center plus (+) & minus sign (-) manually
-
-  //can't use getTextBounds() at all for '+' sign centering
-  PlusBox.Draw(&tft); //draw rectangle with no text
-  int chr_x = PLUSBOX_X + PLUSBOX_WIDTH / 2 - 16;
-  int chr_y = PLUSBOX_Y + PLUSBOX_HEIGHT / 2 -  20;
-  tft.setFont(Arial_40);
-  tft.setCursor(chr_x, chr_y);
-  tft.setTextColor(ILI9341_BLACK);
-  tft.print("+");
-
-  //for '-' sign, get text bounds, but ignore the vertical extent
-  MinusBox.Draw(&tft); //draw rectangle with no text
-  int16_t x1 = 0;
-  int16_t y1 = 0;
-  uint16_t w = 0;
-  uint16_t h = 0;
-  tft.setFont(Arial_40);
-  tft.getTextBounds("-", MINUSBOX_X, MINUSBOX_Y, &x1, &y1, &w, &h);
-
-  chr_x = MINUSBOX_X + MINUSBOX_WIDTH / 2 - w / 2  ;
-  chr_y = MINUSBOX_Y; //ignore getTextBounds() vertical extent
-  tft.setCursor(chr_x, chr_y);
-  tft.setTextColor(ILI9341_BLACK);
-  tft.print("-");
-
-  //03/13/21 centering feature works OK with regular text
+  //03/13/21 new centering feature works great!
   NextBox.Draw(&tft, "NEXT", ILI9341_BLACK, Arial_20, true);
+  PlusBox.Draw(&tft, "+", ILI9341_BLACK, Arial_40, true);
+  MinusBox.Draw(&tft, "-", ILI9341_BLACK, Arial_40, true);
 }
 
 void HideButtons()
