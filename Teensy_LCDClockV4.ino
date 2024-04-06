@@ -6,6 +6,10 @@
     This project was cloned from Teensy_LCDClockV3 to re-investigate the use of proportional fonts
 */
 
+//#include <ILI9341_fonts.h>
+//#include <ili9341_t3n_font_ArialBold.h>
+//#include <ili9341_t3n_font_ComicSansMS.h>
+//#include <ili9341_t3n_font_OpenSans.h>
 #include <XPT2046_Touchscreen.h>
 #include <ILI9341_t3n.h>
 #include <Wire.h>
@@ -838,7 +842,10 @@ void ShowDateDisplay()
   tft.setCursor(0, 0);
   //tft.setTextSize(3);
   tft.setFont(Arial_28);
-  tft.printf("%s %02d/%02d/%02d\n",
+
+  //04/06/24 added spaces to move day/date away from left edge
+  //tft.printf("%s %02d/%02d/%02d\n",
+  tft.printf("   %s %02d/%02d/%02d\n",
     daysOfTheWeek[now.dayOfTheWeek()], now.month(), now.day(), now.year());
 }
 
